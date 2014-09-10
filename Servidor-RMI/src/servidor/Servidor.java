@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rmi.GroupChat;
 import rmi.Implementacion;
 import rmi.ServidorRMI;
 
@@ -17,6 +18,7 @@ public class Servidor {
     public static ServidorRMI servidor;
     public static int puerto = 2014;
     public static Implementacion objetoLocal;
+    public static GroupChat obj;
     public static String nombreReferenciaRemota = "Ejemplo-RMI";
 
     static Logger logger;
@@ -27,6 +29,7 @@ public class Servidor {
         //Se inicializa el objeto, el cual podrá ser llamado remotamente
         try {
             objetoLocal = new Implementacion();
+            obj=new GroupChat(); //se crea un nuevo objeto chat
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje
             logger.log(Level.SEVERE, re.getMessage());
@@ -38,7 +41,9 @@ public class Servidor {
         servidor = new ServidorRMI();
 
         boolean resultadoConexion = servidor.iniciarConexion(objetoLocal, nombreReferenciaRemota, puerto);
-        if (resultadoConexion) {
+        boolean resultadoConexion_2 = servidor.iniciarConexion_2(obj, nombreReferenciaRemota, puerto);
+
+        if (resultadoConexion||resultadoConexion_2) {
             logger.log(Level.INFO, "Se ha establecido la conexión correctamente");
         } else {
             logger.log(Level.INFO, "Ha ocurrido un error al conectarse");

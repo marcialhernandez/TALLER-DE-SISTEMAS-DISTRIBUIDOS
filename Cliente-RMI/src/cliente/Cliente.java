@@ -13,7 +13,7 @@ import rmi_interface.Interface;
 public class Cliente {
 
     public static int Puerto = 2014;                                 //Número del puerto que está alojado el servidor
-    public static String IPServer = "10.42.0.1";                    //Dirección IP del servidor, la cual podría utilizarse por defecto el localhost
+    public static String IPServer = "localhost";                    //Dirección IP del servidor, la cual podría utilizarse por defecto el localhost
     public static String nombreReferenciaRemota = "Ejemplo-RMI"; // Nombre del objeto subido
 
     public static void main(String[] args) {

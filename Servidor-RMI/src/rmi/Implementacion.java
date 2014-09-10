@@ -44,5 +44,7 @@ public class Implementacion extends UnicastRemoteObject implements Interface {
         logger.log(Level.INFO, "Se desea ver los usuarios del servidor");
         return usuarios;
     }
+    
+    
 
 }

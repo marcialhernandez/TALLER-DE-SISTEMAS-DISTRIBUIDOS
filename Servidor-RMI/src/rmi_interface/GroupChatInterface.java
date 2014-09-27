@@ -5,15 +5,23 @@
  */
 
 package rmi_interface;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-     
-    public interface GroupChatInterface extends Remote {
-     
-    public boolean login (MessengerInterface m) throws RemoteException;
-     
-    public void sendToAll(String s, MessengerInterface from) throws RemoteException;
-     
-    public MessengerInterface getMessenger(String username) throws RemoteException;
-     
-    }
+import java.rmi.*;
+
+/**
+ *
+ * @author admin
+ */
+public interface GroupChatInterface extends Remote {
+    
+    	  public boolean login (MessengerInterface m) throws RemoteException;
+          
+          public boolean unlogin(MessengerInterface m) throws RemoteException;
+          
+          public boolean existe(String usuario) throws RemoteException;
+ 
+	  public void sendToAll(String s, MessengerInterface from) throws RemoteException;
+          
+          public void sendTo(String s, MessengerInterface from, String to) throws RemoteException;            
+
+	  public MessengerInterface getMessenger(String username)  throws RemoteException;
+}

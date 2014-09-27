@@ -1,12 +1,9 @@
 package cliente;
 
-import java.rmi.Naming;
 import java.util.ArrayList;
 import java.util.Scanner;
 import rmi.ConexionCliente;
-import rmi_interface.GroupChatInterface;
 import rmi_interface.Interface;
-import rmi_interface.MessengerInterface;
 
 /**
  *
@@ -16,7 +13,7 @@ import rmi_interface.MessengerInterface;
 public class Cliente {
 
     public static int Puerto = 2014;                                 //Número del puerto que está alojado el servidor
-    public static String IPServer = "localhost";                    //Dirección IP del servidor, la cual podría utilizarse por defecto el localhost
+    public static String IPServer = "10.42.0.1";                    //Dirección IP del servidor, la cual podría utilizarse por defecto el localhost
     public static String nombreReferenciaRemota = "Ejemplo-RMI"; // Nombre del objeto subido
 
     public static void main(String[] args) {
@@ -36,7 +33,7 @@ public class Cliente {
                 while (opcion != 3) {
 
                     //Escoger alguna opción del menú
-                    System.out.println("Menú RMI\n1. Ingresar un usuario al servidor\n2. Ver usuarios del servidor\n3. Iniciar chat\n4. Salir");
+                    System.out.println("Menú RMI\n1. Ingresar un usuario al servidor\n2. Ver usuarios del servidor\n3. Salir");
                     Scanner sc = new Scanner(System.in);
                     opcion = Integer.parseInt(sc.next());
 
@@ -61,31 +58,8 @@ public class Cliente {
                         for (String usuario : usuarios) {
                             System.out.println("Usuario: " + usuario);
                         }
-                    }
-                    
-                    else if (opcion == 3) {
-                        
-                        try{
-                                GroupChatInterface server = (GroupChatInterface)Naming.lookup("rmi://localhost/ABCD");
-                            	System.out.println("[System] Client Messenger is running");
-                                System.out.println("Enter a username to login and press Enter:");
-                                String username = sc.nextLine();
-                                MessengerInterface m=new Messenger(username,server);
-                                server.login(m);
-                                server.sendToAll("Just Connected",m);	
-                                    for(;;){
-                                           String aa = sc.nextLine();
-                                           server.sendToAll(aa,m);	
-                            }
-                            
-                        }catch (Exception e) {
-                            System.out.println("Hello Client exception: " + e);
-                            e.printStackTrace();
-}
-                      
-                              
 
-                    } else if (opcion != 4) {
+                    } else if (opcion != 3) {
                         System.out.println("Ingrese un número válido por favor...");
                     }
                 }

@@ -10,12 +10,18 @@ package rmi_interface;
  *
  * @author admin
  */
-    import java.rmi.*;
-     
-    public interface MessengerInterface extends Remote{
-     
-    public String getUsername() throws RemoteException;
-     
-    public void tell(String s) throws RemoteException;
-     
-    }
+import java.rmi.*;
+ 
+public interface MessengerInterface  extends Remote{
+    
+	public String getUsername() throws RemoteException;
+ 
+	public void tell(String s) throws RemoteException; 
+        
+        public boolean comprobarMensajes() throws RemoteException;
+        
+        public void agregarMensaje(String s) throws RemoteException;
+        
+        public String imprimirMensaje() throws RemoteException;
+
+}   

@@ -8,8 +8,7 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static rmi.Implementacion.logger;
-import rmi_interface.GroupChatInterface;
-import rmi_interface.Interface;
+import rmi_interface.*;
 
 /**
  *
@@ -64,7 +63,25 @@ public class ServidorRMI {
         return true;
     }
     
-    public boolean iniciarConexion_2(GroupChatInterface objeto, String nombre, int Puerto) {
+        public boolean iniciarConexionChat(GroupChatInterface objeto, String nombre, int Puerto) {
+
+        try {
+            this.registro = getRegistro(Puerto);
+
+            //Para poder realizar el objeto remoto, deberá estar en el Registry
+            //del servidor, por lo que con el método rebind quedará registrado
+            //con el nombre de referencia del objeto y el objeto inicializado
+            //que entró por parámetro
+            registro.rebind(nombre, objeto);
+        } catch (RemoteException re) {
+            //En caso de haber un error, es mostrado por un mensaje
+            logger.log(Level.SEVERE, re.getMessage());
+            return false;
+        }
+        return true;
+    }
+        
+    public boolean iniciarConexionEco(ServicioEco objeto, String nombre, int Puerto) {
 
         try {
             this.registro = getRegistro(Puerto);

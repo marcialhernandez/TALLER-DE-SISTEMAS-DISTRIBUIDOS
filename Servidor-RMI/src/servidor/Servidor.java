@@ -4,9 +4,7 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rmi.GroupChat;
-import rmi.Implementacion;
-import rmi.ServidorRMI;
+import rmi.*;
 
 /**
  *
@@ -18,8 +16,15 @@ public class Servidor {
     public static ServidorRMI servidor;
     public static int puerto = 2014;
     public static Implementacion objetoLocal;
-    public static GroupChat obj;
+    public static GroupChat objetoLocalChat;
+    public static ServicioEcoImpl objetoLocalEco;
     public static String nombreReferenciaRemota = "Ejemplo-RMI";
+
+    /**
+     *
+     */
+    public static String nombreReferenciaRemotaChat = "rmi://localhost/ABCD";// Nombre del objeto subido
+    public static String nombreReferenciaRemotaEco="Eco";
 
     static Logger logger;
 
@@ -29,7 +34,8 @@ public class Servidor {
         //Se inicializa el objeto, el cual podrá ser llamado remotamente
         try {
             objetoLocal = new Implementacion();
-            obj=new GroupChat(); //se crea un nuevo objeto chat
+            objetoLocalChat = new GroupChat();
+            objetoLocalEco = new ServicioEcoImpl();
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje
             logger.log(Level.SEVERE, re.getMessage());
@@ -41,9 +47,10 @@ public class Servidor {
         servidor = new ServidorRMI();
 
         boolean resultadoConexion = servidor.iniciarConexion(objetoLocal, nombreReferenciaRemota, puerto);
-        boolean resultadoConexion_2 = servidor.iniciarConexion_2(obj, nombreReferenciaRemota, puerto);
+        boolean resultadoConexion2 = servidor.iniciarConexionChat(objetoLocalChat, nombreReferenciaRemotaChat, puerto);
+        boolean resultadoConexion3 = servidor.iniciarConexionEco(objetoLocalEco, nombreReferenciaRemotaEco, puerto);
 
-        if (resultadoConexion||resultadoConexion_2) {
+        if (resultadoConexion && resultadoConexion2 /*&& resultadoConexion3*/) {
             logger.log(Level.INFO, "Se ha establecido la conexión correctamente");
         } else {
             logger.log(Level.INFO, "Ha ocurrido un error al conectarse");
@@ -56,6 +63,9 @@ public class Servidor {
         //En caso que presione una tecla el administrador, se detiene el servicio
         try {
             servidor.detenerConexion(nombreReferenciaRemota);
+            servidor.detenerConexion(nombreReferenciaRemotaChat);
+            servidor.detenerConexion(nombreReferenciaRemotaEco);
+
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje
             logger.log(Level.SEVERE, re.getMessage());

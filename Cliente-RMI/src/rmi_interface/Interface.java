@@ -15,5 +15,4 @@ public interface Interface extends Remote {
     
     public boolean ingresarUsuario(String usuario) throws RemoteException;
     public ArrayList<String> verUsuarios() throws RemoteException;
-    
 }

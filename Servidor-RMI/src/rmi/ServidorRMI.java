@@ -81,7 +81,7 @@ public class ServidorRMI {
         return true;
     }
         
-    public boolean iniciarConexionEco(ServicioEco objeto, String nombre, int Puerto) {
+    public boolean iniciarConexionTablero(ServicioTablero objeto, String nombre, int Puerto) {
 
         try {
             this.registro = getRegistro(Puerto);

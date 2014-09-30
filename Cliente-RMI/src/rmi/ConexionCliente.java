@@ -11,14 +11,14 @@ public class ConexionCliente {
     private boolean conectado;  //Estado de conexión del usuario con el servidor
     private Interface servidor; //Interface necesaria para la comunición con el objecto del servidor
     private GroupChatInterface servidorChat;
-    private ServicioEco servidorEco;
+    private InterfazTableroServer servidorTablero;
     
     public ConexionCliente() {
         this.conectado = false;
         this.registry = null;
         this.servidor = null;
         this.servidorChat=null;
-        this.servidorEco=null;
+        this.servidorTablero=null;
     }
 
     public boolean iniciarRegistro(String IP, int Puerto, String nombreObjetoRemoto) throws RemoteException {
@@ -93,7 +93,7 @@ public class ConexionCliente {
 
     }
         
-    public boolean iniciarRegistroEco(String IP, int Puerto, String nombreObjetoRemoto) throws RemoteException {
+    public boolean iniciarRegistroTablero(String IP, int Puerto, String nombreObjetoRemoto) throws RemoteException {
         try {
             
             //Se le otorga el permiso necesario para poder ejecutar las funciones correspondientes
@@ -113,7 +113,7 @@ public class ConexionCliente {
             }
 
             //Vamos al Registry y miramos el Objeto "nombreObjRemoto" para poder usarlo.
-            servidorEco = (ServicioEco) registry.lookup(nombreObjetoRemoto);
+            servidorTablero = (InterfazTableroServer) registry.lookup(nombreObjetoRemoto);
 
             this.conectado = true;
             return true;
@@ -155,8 +155,8 @@ public class ConexionCliente {
         return servidorChat;
     }
     
-    public ServicioEco getServidorEco() {
-        return servidorEco;
+    public InterfazTableroServer getServidorTablero() {
+        return servidorTablero;
     }
         
 
@@ -168,7 +168,7 @@ public class ConexionCliente {
         this.servidorChat = servidorEntrada;
     }
     
-    public void setServidor(ServicioEco servidorEntrada) {
-        this.servidorEco = servidorEntrada;
+    public void setServidor(InterfazTableroServer servidorEntrada) {
+        this.servidorTablero = servidorEntrada;
     }
 }

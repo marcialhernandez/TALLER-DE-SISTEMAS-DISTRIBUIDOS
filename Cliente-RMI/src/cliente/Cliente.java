@@ -75,7 +75,10 @@ class hiloChat extends Thread{
     String[] separadoEspacio;
     String[] usuarioDestino;
     String[] mensajeEfectivo;
-    static volatile CustomInputStream messageToChat;
+    PaginaPrincipal ventana;
+
+    
+    //static volatile CustomInputStream messageToChat;
 
     
         hiloChat(ConexionCliente conexionActual){
@@ -87,18 +90,22 @@ class hiloChat extends Thread{
             username="";
             mensaje="";
             banderaRecepcionChat=0;
+
         }
         
-        hiloChat(ConexionCliente conexionActual, CustomInputStream messageToChat){
+            hiloChat(ConexionCliente conexionActual, PaginaPrincipal VentanaPr){
             
             chat=conexionActual.getServidorChat();
-            entradaChat=messageToChat.inputFromChat();
+            entradaChat=new Scanner(System.in);
             sesionCliente = null;
             ingresoUsername=false;
             username="";
             mensaje="";
             banderaRecepcionChat=0;
+            PaginaPrincipal VentanaPrincipal=new PaginaPrincipal();
+
         }
+
         
         
     @Override
@@ -111,7 +118,7 @@ class hiloChat extends Thread{
                       synchronized(this) {
                       username = entradaChat.nextLine();
                       }
-                      sesionCliente=new Messenger(username,chat);
+                      sesionCliente=new Messenger(username);
                       ingresoUsername=chat.login(sesionCliente);
                       if(ingresoUsername==false){
                           System.out.println("[System] Ya existe el usuario ingreso, intentelo de nuevo");
@@ -206,7 +213,7 @@ public class Cliente {
     public static String IPServer = "Localhost";                    //Dirección IP del servidor, la cual podría utilizarse por defecto el localhost
     public static String nombreReferenciaRemota = "Ejemplo-RMI";
     public static String nombreReferenciaRemotaChat = "rmi://localhost/ABCD";// Nombre del objeto subido
-    public static String nombreReferenciaRemotaEco="Eco";
+    public static String nombreReferenciaRemotaTablero="Tablero";
     public static int banderaEscucha=0; //con 0 Escucha, con 1 no
     public static int banderaEscrituraChat=0; //con 0 escribe, con 1 no
     hiloChat chatCliente=null;
@@ -221,18 +228,18 @@ public class Cliente {
 
         Interface objetoRemoto; //Se crea un nuevo objeto llamado objetoRemoto
         objetoRemotoChat=null;
-        ServicioEco objetoRemotoEco;
+        InterfazTableroServer objetoRemotoTablero;
 
         //Se instancia el objeto que conecta con el servidor
         ConexionCliente conexion = new ConexionCliente();
         try {
             //Se conecta con el servidor
-            if (conexion.iniciarRegistro(IPServer, Puerto, nombreReferenciaRemota) && conexion.iniciarRegistroChat(IPServer, Puerto, nombreReferenciaRemotaChat )  && conexion.iniciarRegistroEco(IPServer, Puerto, nombreReferenciaRemotaEco )) {
+            if (conexion.iniciarRegistro(IPServer, Puerto, nombreReferenciaRemota) && conexion.iniciarRegistroChat(IPServer, Puerto, nombreReferenciaRemotaChat )  && conexion.iniciarRegistroTablero(IPServer, Puerto, nombreReferenciaRemotaTablero )) {
 
                 //Se obtiene la referencia al objeto remoto
                 objetoRemoto = conexion.getServidor();
                 //objetoRemotoChat=conexion.getServidorChat();
-                objetoRemotoEco=conexion.getServidorEco();
+                objetoRemotoTablero=conexion.getServidorTablero();
 
                 int opcion = 0;
                 while (opcion != 5) {
@@ -270,8 +277,7 @@ public class Cliente {
                         System.setOut(salidaToChat);
                         VentanaPrincipal=new PaginaPrincipal();
                         //entradaDesdeChat=new CustomInputStream (VentanaPrincipal);
-                        
-                                                
+                                                       
                         java.awt.EventQueue.invokeLater(new Runnable() {
                             public void run() {
                             VentanaPrincipal.setVisible(true);                          
@@ -285,19 +291,34 @@ public class Cliente {
                                 banderaChat=false;
                                 }                            
                         }
-
                         
     }    
                     else if (opcion == 4) {
+                        
+                   //tablero_jugador tablero = new tablero_jugador();
+                   //int tablero2[][]=tablero.getTablero2();
+                        //objetoRemotoTablero.ServicioTablero ();
+                        int muestra[][]=objetoRemotoTablero.getTablero2();
+                        for(int i = 0;i<10;i++){
+                               for(int j = 0;j<10;j++){
+                                System.out.print(muestra[i][j]);
+                
+                                }
+                            System.out.println();
+                        }
+                        
+                        //System.out.println("Tablero");
+
                         //Llama a un método del objeto remoto
-                        Scanner consola = new Scanner(System.in);
+                        /*Scanner consola = new Scanner(System.in);
                         String palabra="";
                         while(! palabra.equals("@exit")){
                         System.out.println("Ingrese la palabra a capitalizar,\npara salir ingrese @exit");
                         palabra = consola.nextLine();
                         String salida=objetoRemotoEco.eco(palabra);
                         System.out.println("La palabra capitalizada es : " + salida);
-                        }              
+                        } */
+                        
                     }
                       
                        else if (opcion != 5) {

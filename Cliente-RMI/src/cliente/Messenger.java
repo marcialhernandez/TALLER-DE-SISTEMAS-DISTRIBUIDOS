@@ -20,12 +20,12 @@ import rmi_interface.*;
 public class Messenger extends UnicastRemoteObject implements MessengerInterface{
  
 	private String username;
-	private GroupChatInterface server;
+	//private GroupChatInterface server;
         private Vector buzon;
         
-        public Messenger(String u, GroupChatInterface s) throws RemoteException {
+        public Messenger(String u/*, GroupChatInterface s*/) throws RemoteException {
 		username=u;
-		server=s;
+		//server=s;
                 buzon=new Vector();
 	}
         
@@ -40,8 +40,8 @@ public class Messenger extends UnicastRemoteObject implements MessengerInterface
         }
         
         @Override
-        public void agregarMensaje(String s) throws RemoteException{
-            this.buzon.add(s);
+        public void agregarMensaje(String mensaje) throws RemoteException{
+            this.buzon.add(mensaje);
         }
         
         @Override

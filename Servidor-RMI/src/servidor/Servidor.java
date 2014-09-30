@@ -17,14 +17,14 @@ public class Servidor {
     public static int puerto = 2014;
     public static Implementacion objetoLocal;
     public static GroupChat objetoLocalChat;
-    public static ServicioEcoImpl objetoLocalEco;
+    public static ServicioTablero objetoLocalTablero;
     public static String nombreReferenciaRemota = "Ejemplo-RMI";
 
     /**
      *
      */
     public static String nombreReferenciaRemotaChat = "rmi://localhost/ABCD";// Nombre del objeto subido
-    public static String nombreReferenciaRemotaEco="Eco";
+    public static String nombreReferenciaRemotaTablero="Tablero";
 
     static Logger logger;
 
@@ -35,7 +35,7 @@ public class Servidor {
         try {
             objetoLocal = new Implementacion();
             objetoLocalChat = new GroupChat();
-            objetoLocalEco = new ServicioEcoImpl();
+            objetoLocalTablero = new ServicioTablero();
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje
             logger.log(Level.SEVERE, re.getMessage());
@@ -48,9 +48,9 @@ public class Servidor {
 
         boolean resultadoConexion = servidor.iniciarConexion(objetoLocal, nombreReferenciaRemota, puerto);
         boolean resultadoConexion2 = servidor.iniciarConexionChat(objetoLocalChat, nombreReferenciaRemotaChat, puerto);
-        boolean resultadoConexion3 = servidor.iniciarConexionEco(objetoLocalEco, nombreReferenciaRemotaEco, puerto);
+        boolean resultadoConexion3 = servidor.iniciarConexionTablero(objetoLocalTablero, nombreReferenciaRemotaTablero, puerto);
 
-        if (resultadoConexion && resultadoConexion2 /*&& resultadoConexion3*/) {
+        if (resultadoConexion && resultadoConexion2 && resultadoConexion3) {
             logger.log(Level.INFO, "Se ha establecido la conexión correctamente");
         } else {
             logger.log(Level.INFO, "Ha ocurrido un error al conectarse");
@@ -64,7 +64,7 @@ public class Servidor {
         try {
             servidor.detenerConexion(nombreReferenciaRemota);
             servidor.detenerConexion(nombreReferenciaRemotaChat);
-            servidor.detenerConexion(nombreReferenciaRemotaEco);
+            servidor.detenerConexion(nombreReferenciaRemotaTablero);
 
         } catch (RemoteException re) {
             //En caso de haber un error, es mostrado por un mensaje

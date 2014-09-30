@@ -4,27 +4,32 @@
  * and open the template in the editor.
  */
 
-package tablero;
-import java.util.Random;
+package rmi;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
+import rmi_interface.*;
 /**
  *
  * @author alvaro
  */
-public final class tablero_jugador {
+public final class ServicioTablero extends UnicastRemoteObject implements InterfazTableroServer {
     
     static int tablero2[][] = new int [10][10];
     static int tablero4[][] = new int [10][10];
     static int tablero5[][] = new int [10][10];
     static int tablero10[][] = new int [10][10];
-    public tablero_jugador(){
+    
+    public ServicioTablero () throws RemoteException{
         llenatablero2();
         llenatablero4();
         llenatablero5();
         llenatablero10();
-        
     }
+    
 
-    public void llenatablero10(){
+    @Override
+    public void llenatablero10() throws RemoteException{
         
         int matriz[][] = generaRandom(5,2,3);
         
@@ -97,7 +102,9 @@ public final class tablero_jugador {
             System.out.println();
         }*/
     }    
-    public void llenatablero5(){
+    
+    @Override
+    public void llenatablero5() throws RemoteException{
         
         int matriz[][] = generaRandom(10,2,3);
         
@@ -142,7 +149,8 @@ public final class tablero_jugador {
         }*/
     }
     
-    public void llenatablero4(){
+    @Override
+    public void llenatablero4() throws RemoteException{
         
         int matriz[][] = generaRandom(5,5,5);
         
@@ -183,7 +191,8 @@ public final class tablero_jugador {
         }*/
     }
     
-    public final void llenatablero2(){
+    @Override
+    public final void llenatablero2()throws RemoteException{
         
         int matriz[][] = generaRandom(10,5,10);
         
@@ -210,7 +219,8 @@ public final class tablero_jugador {
         }*/
     }
     //genera una sub matriz con trampas aleatorias
-    public int[][] generaRandom(int i, int j, int nTrampas){
+    @Override
+    public int[][] generaRandom(int i, int j, int nTrampas) throws RemoteException{
         
         int matriz[][] = new int [i][j];
         Random rnd1 = new Random();
@@ -229,13 +239,15 @@ public final class tablero_jugador {
 
         return matriz;
     }
-    
-    public int[][] colocaRaton(int matriz[][]){
+
+    @Override
+    public int[][] colocaRaton(int matriz[][]) throws RemoteException{
         matriz[0][0]=8;
         return matriz;
     }
     
-    public int[][] colocaSalida(int matriz[][],int inicio){
+    @Override
+    public int[][] colocaSalida(int matriz[][],int inicio) throws RemoteException{
         
         int filas = numeroAzar();
         int columnas = numeroAzar();
@@ -247,13 +259,16 @@ public final class tablero_jugador {
         return matriz;
     }
     
-    private int numeroAzar(){
+    
+    @Override
+    public int numeroAzar() throws RemoteException{
         Random rnd = new Random();
         int numero = rnd.nextInt(10);
         return numero;
     }
             
-    boolean validaSalida(int inicio, int fila, int columna){
+    @Override
+    public boolean validaSalida(int inicio, int fila, int columna) throws RemoteException{
         if(inicio==2){
             if((fila==0 && columna==0)||(fila==0 && columna==5)){
                 return false;
@@ -277,7 +292,8 @@ public final class tablero_jugador {
     return true;
     }
     // varifica si el raton puede salir del origen
-    boolean verificacionStndar(int matriz[][]){
+    @Override
+    public boolean verificacionStndar(int matriz[][]) throws RemoteException{
     
         if(matriz[0][0]==1){
             return false;
@@ -288,28 +304,40 @@ public final class tablero_jugador {
         return true;
     }
     
-    public int [][] getTablero2(){   
+    @Override
+    public int [][] getTablero2() throws RemoteException{   
         return tablero2;
     }
-    public int [][] getTablero4(){    
+    @Override
+    public int [][] getTablero4() throws RemoteException{    
         return tablero4;
     }
-    public int [][] getTablero5(){ 
+    
+    @Override
+    public int [][] getTablero5() throws RemoteException{ 
         return tablero5;
     }
-    public int [][] getTablero10(){
+    @Override
+    public int [][] getTablero10() throws RemoteException{
         return tablero10;
     }
-
-    public void setTablero2(int matriz[][]){
+    
+    @Override
+    public void setTablero2(int matriz[][]) throws RemoteException{
         tablero4=matriz;
     }
+    
+    @Override
     public void setTablero4(int matriz[][]){
         tablero4=matriz;
     }
+    
+    @Override
     public void setTablero5(int matriz[][]){
         tablero5=matriz;
     }
+    
+    @Override
     public void setTablero10(int matriz[][]){
         tablero10=matriz;
     }

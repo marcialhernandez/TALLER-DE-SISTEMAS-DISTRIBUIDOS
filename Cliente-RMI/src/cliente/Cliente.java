@@ -1,5 +1,12 @@
 package cliente;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintStream;
+import java.io.Reader;
 import static java.lang.Thread.sleep;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -11,12 +18,18 @@ import rmi_interface.*;
 import tablero.*;
 import static tablero.PaginaPrincipal.vacio;
 
+
 /**
  *
  * @author Daniel Wladdimiro Cottet
  * @title Taller de sistemas distribuidos - Clase 1
  */
 
+//Hilo que se ejecuta en segundo plano cuando se ejecuta hiloChat
+//Verifica cada 3 segundos si el buzon de messenger tiene mensajes
+//En caso que tenga, saca el primer mensaje de la pila de mensajes
+//Borra el primer mensaje de esa pila y vuelve a verificar
+//En caso que no haya no retorna nada
 class escuchaChat extends Thread{
     
     MessengerInterface sesionActual;
@@ -43,8 +56,11 @@ class escuchaChat extends Thread{
         }
     }
 
-//aqui
 
+//Hilo que se ejecuta en segundo plano mientras el jugador esta activo
+//Toma la conexion del servidor y solicita el servicio GroupChat
+//Asocia la session actual MessengerInterface con el servicio remoto
+//Solicita y envia informacion al servidor de forma concurrente con la interfaz
 class hiloChat extends Thread{
     
     static volatile GroupChatInterface chat;
@@ -59,13 +75,24 @@ class hiloChat extends Thread{
     String[] separadoEspacio;
     String[] usuarioDestino;
     String[] mensajeEfectivo;
-    //String mensajeInterGrafico;
-    private ArrayList mensajeInterGrafico;
+    static volatile CustomInputStream messageToChat;
+
     
         hiloChat(ConexionCliente conexionActual){
             
             chat=conexionActual.getServidorChat();
             entradaChat=new Scanner(System.in);
+            sesionCliente = null;
+            ingresoUsername=false;
+            username="";
+            mensaje="";
+            banderaRecepcionChat=0;
+        }
+        
+        hiloChat(ConexionCliente conexionActual, CustomInputStream messageToChat){
+            
+            chat=conexionActual.getServidorChat();
+            entradaChat=messageToChat.inputFromChat();
             sesionCliente = null;
             ingresoUsername=false;
             username="";
@@ -97,7 +124,7 @@ class hiloChat extends Thread{
                       escuchandoServidor = new escuchaChat(sesionCliente,banderaRecepcionChat);
                       escuchandoServidor.start();
                       
-                      while(! mensaje.equals("@exit")){
+                      while(! mensaje.equals("@exit") ){
                           
                           mensaje = entradaChat.nextLine();
                           if( mensaje.equals("@exit")){
@@ -111,7 +138,7 @@ class hiloChat extends Thread{
                                   {
                                       separadoEspacio=mensaje.split(" ");
                                       usuarioDestino=separadoEspacio[1].split("::");
-                                      if (chat.existe(usuarioDestino[0])){
+                                      if (chat.existe(usuarioDestino[0])&& mensaje.contains(usuarioDestino[0]+"::")){
                                           mensajeEfectivo =mensaje.split("::");
                                           chat.sendTo(mensajeEfectivo [1], sesionCliente, usuarioDestino[0]);
                                            //mandar mensaje
@@ -122,7 +149,7 @@ class hiloChat extends Thread{
                                   
                                   }
                           else{
-                          chat.sendToAll(mensaje,sesionCliente);
+                          System.out.println(chat.sendToAll(mensaje,sesionCliente));
                           sleep(1000);
                           }
 
@@ -136,6 +163,42 @@ class hiloChat extends Thread{
     }
     }
 
+//http://stackoverflow.com/questions/1522444/how-to-redirect-all-console-output-to-a-swing-jtextarea-jtextpane-with-the-right
+
+class MyOutputStream extends OutputStream {
+
+private PipedOutputStream out = new PipedOutputStream();
+private Reader reader;
+
+public MyOutputStream() throws IOException {
+    PipedInputStream in = new PipedInputStream(out);
+    reader = new InputStreamReader(in, "UTF-8");
+}
+
+@Override
+public void write(int i) throws IOException {
+    out.write(i);
+}
+
+@Override
+public void write(byte[] bytes, int i, int i1) throws IOException {
+    out.write(bytes, i, i1);
+}
+
+@Override
+public void flush() throws IOException {
+    if (reader.ready()) {
+        char[] chars = new char[1024];
+        int n = reader.read(chars);
+
+        // this is your text
+        String txt = new String(chars, 0, n);
+
+        // write to System.err in this example
+        System.err.print(txt);
+    }
+}
+}
 
 public class Cliente {
 
@@ -149,9 +212,12 @@ public class Cliente {
     hiloChat chatCliente=null;
     static volatile GroupChatInterface objetoRemotoChat;
     static boolean banderaChat=true;
+    static PrintStream salidaToChat;
+    static PaginaPrincipal VentanaPrincipal;
+    static CustomInputStream entradaDesdeChat;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Interface objetoRemoto; //Se crea un nuevo objeto llamado objetoRemoto
         objetoRemotoChat=null;
@@ -200,9 +266,15 @@ public class Cliente {
                         
                     }else if (opcion == 3) {
                         
+                        salidaToChat=new PrintStream(new MyOutputStream(), true, "UTF-8");
+                        System.setOut(salidaToChat);
+                        VentanaPrincipal=new PaginaPrincipal();
+                        //entradaDesdeChat=new CustomInputStream (VentanaPrincipal);
+                        
+                                                
                         java.awt.EventQueue.invokeLater(new Runnable() {
                             public void run() {
-                            new PaginaPrincipal(vacio).setVisible(true);                          
+                            VentanaPrincipal.setVisible(true);                          
                             }
                         });
                         
@@ -213,6 +285,8 @@ public class Cliente {
                                 banderaChat=false;
                                 }                            
                         }
+
+                        
     }    
                     else if (opcion == 4) {
                         //Llama a un método del objeto remoto

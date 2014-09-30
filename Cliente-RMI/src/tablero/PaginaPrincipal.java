@@ -5,20 +5,55 @@
  */
 
 package tablero;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.*;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author azUl
  */
+ class CustomOutputStream extends OutputStream {
+    private JTextArea textArea;
+     
+    public CustomOutputStream(JTextArea textArea) {
+        this.textArea = textArea;
+    }
+     
+ 
+    @Override
+    public void write(int b) throws IOException {
+        // redirects data to the text area
+        textArea.append(String.valueOf((char)b));
+        // scrolls the text area to the end of data
+        textArea.setCaretPosition(textArea.getDocument().getLength());
+    }
+}
+
+//https://community.oracle.com/thread/1362874?start=0&tstart=0
+
+
 public class PaginaPrincipal extends javax.swing.JFrame {
     DefaultTableModel modelo;
     static public ArrayList vacio;
+    String entradaChat, salidaChat;
     /**
      * Creates new form PaginaPrincipal
      */
-    public PaginaPrincipal(ArrayList entradaChat) {
+    
+    /**
+     * Creates new form PaginaPrincipal
+     * @return
+     */
+    public JTextArea paginaPrincipalInput(){
+        return this.jTextArea2;
+        }
+    
+    static volatile PrintStream standardOut;    
+    public PaginaPrincipal() {
         initComponents();
         this.setTitle("Laboratorio1 Sistemas Distribuidos");
         this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
@@ -28,7 +63,18 @@ public class PaginaPrincipal extends javax.swing.JFrame {
             jTable2.setValueAt(elemento, i, j);
             }                    
          }
-        jTable2.setEnabled(false);       
+        jTable2.setEnabled(false);
+
+        PrintStream printStream = new PrintStream(new CustomOutputStream(jTextArea1));
+        standardOut = System.out;
+        System.setOut(printStream);
+        System.setErr(printStream);
+        jTextArea1.setEditable(false);
+         
+        // keeps reference of standard output stream
+        //standardOut = System.out;
+         
+        // re-assigns standard output stream and error output stream;
     }
 
     /**
@@ -190,10 +236,11 @@ public class PaginaPrincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/*
     /**
      * @param args the command line arguments
      */
+    /*
     public static void main(String args[]) {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -203,6 +250,7 @@ public class PaginaPrincipal extends javax.swing.JFrame {
             }
         });
     }
+    */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;

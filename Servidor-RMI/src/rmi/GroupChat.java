@@ -67,8 +67,9 @@ public class GroupChat extends UnicastRemoteObject implements GroupChatInterface
 	}
                 
         @Override
-	public void sendToAll(String s,MessengerInterface from) throws RemoteException{
-		System.out.println("\n["+from.getUsername()+"] "+s);
+	public String sendToAll(String s,MessengerInterface from) throws RemoteException{
+		//System.out.println("\n["+from.getUsername()+"] "+s);
+                String mensajeRetorno="\n["+from.getUsername()+"] "+s;
 		Enumeration usernames = l.keys();
         while(usernames.hasMoreElements()){
 		       String user=(String) usernames.nextElement();
@@ -79,6 +80,7 @@ public class GroupChat extends UnicastRemoteObject implements GroupChatInterface
 		    	   m.tell("\n["+from.getUsername()+"] "+s);
 		       }catch(RemoteException e){}
         }
+        return mensajeRetorno;
         
 	}
        

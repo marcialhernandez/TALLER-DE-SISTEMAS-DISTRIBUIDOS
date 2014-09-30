@@ -19,7 +19,9 @@ public interface GroupChatInterface extends Remote {
           
           public boolean existe(String usuario) throws RemoteException;
  
-	  public void sendToAll(String s, MessengerInterface from) throws RemoteException;
+	  //public void sendToAll(String s, MessengerInterface from) throws RemoteException;
+          public String sendToAll(String s, MessengerInterface from) throws RemoteException;
+
           
           public void sendTo(String s, MessengerInterface from, String to) throws RemoteException;            
 

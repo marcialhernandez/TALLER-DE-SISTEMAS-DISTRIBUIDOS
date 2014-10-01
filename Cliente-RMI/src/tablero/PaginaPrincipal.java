@@ -3,8 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package tablero;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -17,78 +17,93 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author azUl
  */
- class CustomOutputStream extends OutputStream {
+class CustomOutputStream extends OutputStream {
+
     private JTextArea textArea;
-     
+
     public CustomOutputStream(JTextArea textArea) {
         this.textArea = textArea;
     }
-     
- 
+
     @Override
     public void write(int b) throws IOException {
         // redirects data to the text area
-        textArea.append(String.valueOf((char)b));
+        textArea.append(String.valueOf((char) b));
         // scrolls the text area to the end of data
         textArea.setCaretPosition(textArea.getDocument().getLength());
     }
 }
 
 //https://community.oracle.com/thread/1362874?start=0&tstart=0
-
-
 public class PaginaPrincipal extends javax.swing.JFrame {
+
     DefaultTableModel modelo;
     static public ArrayList vacio;
     static volatile String entradaChat;
     Scanner InputFromKeyboard;
     String textoPanelEntrada;
-    
-    
+    private int matriz[][];
+
     /**
      * Creates new form PaginaPrincipal
      */
-    
     /**
      * Creates new form PaginaPrincipal
+     *
      * @return
      */
-    
-    public String entradaDesdeTextField(){
-        while (this.textoPanelEntrada.isEmpty()==true){      
-        }
-        return this.textoPanelEntrada;          
+    public void setMatriz(int[][] entradaMatriz) {
+        this.matriz = entradaMatriz;
+
     }
-    
-    public JButton confirmacionInput(){
+
+    public String entradaDesdeTextField() {
+        while (this.textoPanelEntrada.isEmpty() == true) {
+        }
+        return this.textoPanelEntrada;
+    }
+
+    public JButton confirmacionInput() {
         return this.jButton1;
     }
-    
-    static volatile PrintStream standardOut;    
+
+    static volatile PrintStream standardOut;
+
     public PaginaPrincipal() {
         initComponents();
+        //  matriz=new int [10][10];
         this.setTitle("Laboratorio1 Sistemas Distribuidos");
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-        for (int i=0; i<10; i++) {
-            for (int j=0; j<10; j++) {
-            Object elemento=i+","+j;
-            jTable2.setValueAt(elemento, i, j);
-            }                    
-         }
+        this.setDefaultCloseOperation(PaginaPrincipal.EXIT_ON_CLOSE);
+        //  for (int i=0; i<10; i++) {
+        //      for (int j=0; j<10; j++) {
+        //      Object elemento;
+        //          elemento = matriz[i][j];
+        //      jTable2.setValueAt(elemento, i, j);
+        //      }                    
+        //   }
         jTable2.setEnabled(false);
 
-        PrintStream printStream = new PrintStream(new CustomOutputStream(jTextArea1));
-        standardOut = System.out;
-        System.setOut(printStream);
-        System.setErr(printStream);
+        //PrintStream printStream = new PrintStream(new CustomOutputStream(jTextArea1));
+        //standardOut = System.out;
+        //System.setOut(printStream);
+        //System.setErr(printStream);
         jTextArea1.setEditable(false);
         //con esto se declara que el jtext2 sea una entrada de datos
         InputFromKeyboard = new Scanner(jTextArea2.getText());
-         
+
         // keeps reference of standard output stream
         //standardOut = System.out;
-         
         // re-assigns standard output stream and error output stream;
+    }
+
+    public void imprimirTablero() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                Object elemento;
+                elemento = this.matriz[i][j];
+                jTable2.setValueAt(elemento, i, j);
+            }
+        }
     }
 
     /**
@@ -270,28 +285,28 @@ public class PaginaPrincipal extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         //Con esto agrego al vector lo que contenga el cuadro
-        textoPanelEntrada=jTextArea2.getText();
-        
+        textoPanelEntrada = jTextArea2.getText();
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-/*
-    /**
+    /*
+     /**
      * @param args the command line arguments
      */
     /*
-    public static void main(String args[]) {
+     public static void main(String args[]) {
         
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PaginaPrincipal(vacio).setVisible(true);
+     java.awt.EventQueue.invokeLater(new Runnable() {
+     public void run() {
+     new PaginaPrincipal(vacio).setVisible(true);
                            
-            }
-        });
-    }
-    */
+     }
+     });
+     }
+     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

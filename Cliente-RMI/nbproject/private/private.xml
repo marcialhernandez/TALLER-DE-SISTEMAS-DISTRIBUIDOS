@@ -4,13 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/cliente/Messenger.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/tablero/CustomInputStream.java</file>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/rmi_interface/MessengerInterface.java</file>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/rmi_interface/InterfazTableroServer.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/tablero/PaginaPrincipal.java</file>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/rmi_interface/GroupChatInterface.java</file>
+            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/tablero/PaginaPrincipal.java</file>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/cliente/Cliente.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Cliente-RMI/src/rmi/ConexionCliente.java</file>
         </group>
     </open-files>
 </project-private>

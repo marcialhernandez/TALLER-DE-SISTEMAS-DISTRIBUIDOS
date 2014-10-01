@@ -22,12 +22,24 @@ public class Messenger extends UnicastRemoteObject implements MessengerInterface
 	private String username;
 	//private GroupChatInterface server;
         private Vector buzon;
+        private int turnoCliente;
+                
         
-        public Messenger(String u/*, GroupChatInterface s*/) throws RemoteException {
+        public Messenger(String u, GroupChatInterface s) throws RemoteException {
 		username=u;
-		//server=s;
+		turnoCliente=s.cantidadUsuarios()+1;
                 buzon=new Vector();
 	}
+        
+        @Override
+        public void setTurnoCliente(int numeroTurno) throws RemoteException{
+            this.turnoCliente=numeroTurno;
+        }
+        
+        @Override
+        public int getTurnoCliente() throws RemoteException{
+            return this.turnoCliente;
+        }
         
         @Override
         public boolean comprobarMensajes() throws RemoteException{

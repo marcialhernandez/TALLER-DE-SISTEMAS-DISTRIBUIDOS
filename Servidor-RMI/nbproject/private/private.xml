@@ -4,13 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi/ServicioTablero.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi/Implementacion.java</file>
+            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi_interface/MessengerInterface.java</file>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi_interface/InterfazTableroServer.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi_interface/GroupChatInterface.java</file>
             <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi/GroupChat.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi_interface/Interface.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/servidor/Servidor.java</file>
-            <file>file:/home/admin/Documentos/codigo/TALLER-DE-SISTEMAS-DISTRIBUIDOS/Servidor-RMI/src/rmi/ServidorRMI.java</file>
         </group>
     </open-files>
 </project-private>

@@ -64,10 +64,10 @@ class escuchaTablero extends Thread {
         conexionActual = entradaConexion;
         this.aceptar = 0;
     }
-    
-    escuchaTablero(ConexionCliente entradaConexion,int varGlobal) {
+
+    escuchaTablero(ConexionCliente entradaConexion, int varGlobal) {
         conexionActual = entradaConexion;
-        this.aceptar =varGlobal;
+        this.aceptar = varGlobal;
     }
 
     int getAceptar() {
@@ -134,7 +134,7 @@ class hiloChat extends Thread {
 
     }
 
-    hiloChat(ConexionCliente conexionActual, PaginaPrincipal VentanaPr) {
+    /*hiloChat(ConexionCliente conexionActual, PaginaPrincipal VentanaPr) {
 
         chat = conexionActual.getServidorChat();
         entradaChat = new Scanner(System.in);
@@ -145,7 +145,7 @@ class hiloChat extends Thread {
         banderaRecepcionChat = 0;
         PaginaPrincipal VentanaPrincipal = new PaginaPrincipal();
 
-    }
+    }*/
 
     public int turnoHilo() throws RemoteException {
         return this.sesionCliente.getTurnoCliente();
@@ -233,7 +233,7 @@ public class Cliente {
     static PaginaPrincipal VentanaPrincipal;
     static CustomInputStream entradaDesdeChat;
     static public volatile boolean aceptar = true;
-    static int cantidadUsuariosON=0;
+    static int cantidadUsuariosON = 0;
 
     public static int[][] sacaMatriz(int[][] matrizz, int jugador, int cantidadJugadores, int ratonx, int ratony, int salidax, int saliday) {
         int[][] matrizValida = new int[10][10];
@@ -264,6 +264,8 @@ public class Cliente {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
                         matrizValida[i][j] = matrizz[i][j];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -271,7 +273,9 @@ public class Cliente {
             if (jugador == 2) {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        matrizValida[i][j] = matrizz[i + 5][j];
+                        matrizValida[i + 5][j] = matrizz[i + 5][j];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -279,15 +283,19 @@ public class Cliente {
             if (jugador == 3) {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        matrizValida[i][j] = matrizz[i][j + 5];
+                        matrizValida[i][j + 5] = matrizz[i][j + 5];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
             }
             if (jugador == 4) {
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        matrizValida[i][j] = matrizz[i + 5][j + 5];
+                        matrizValida[i + 5][j + 5] = matrizz[i + 5][j + 5];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -299,6 +307,8 @@ public class Cliente {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -307,6 +317,8 @@ public class Cliente {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 2];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -315,6 +327,8 @@ public class Cliente {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 4];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -323,6 +337,8 @@ public class Cliente {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 6];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -331,6 +347,8 @@ public class Cliente {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 8];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -342,6 +360,8 @@ public class Cliente {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -350,6 +370,8 @@ public class Cliente {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 2];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -358,6 +380,8 @@ public class Cliente {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 4];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -366,6 +390,8 @@ public class Cliente {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 6];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -374,6 +400,58 @@ public class Cliente {
                 for (int i = 0; i < 10; i++) {
                     for (int j = 0; j < 2; j++) {
                         matrizValida[i][j] = matrizz[i][j + 8];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
+                    }
+                }
+                return matrizValida;
+            }
+            if (jugador == 6) {
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        matrizValida[i + 5][j] = matrizz[i + 5][j];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
+                    }
+                }
+                return matrizValida;
+            }
+            if (jugador == 2) {
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        matrizValida[i + 5][j] = matrizz[i + 5][j + 2];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
+                    }
+                }
+                return matrizValida;
+            }
+            if (jugador == 3) {
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        matrizValida[i + 5][j] = matrizz[i + 5][j + 4];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
+                    }
+                }
+                return matrizValida;
+            }
+            if (jugador == 4) {
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        matrizValida[i + 5][j] = matrizz[i + 5][j + 6];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
+                    }
+                }
+                return matrizValida;
+            }
+            if (jugador == 5) {
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        matrizValida[i + 5][j] = matrizz[i + 5][j + 8];
+                        matrizValida[ratonx][ratony] = 8;
+                        matrizValida[salidax][saliday] = 5;
                     }
                 }
                 return matrizValida;
@@ -435,29 +513,29 @@ public class Cliente {
                         //salidaToChat = new PrintStream(new MyOutputStream(), true, "UTF-8");
                         //System.setOut(salidaToChat);
                         hiloChat chatActual = new hiloChat(conexion);
-                        VentanaPrincipal = new PaginaPrincipal();
+                        VentanaPrincipal = new PaginaPrincipal(conexion);
                         //escuchaTablero hiloCantidadPlayers = new escuchaTablero(conexion);
-                        
+
                         chatActual.start();
                         //hiloCantidadPlayers.start();
-                        cantidadUsuariosON=conexion.getServidorChat().cantidadUsuarios();
+                        cantidadUsuariosON = conexion.getServidorChat().cantidadUsuarios();
                         //int a=0;
-                        
+
                         //--------No iniciar hasta tener cantidad de jugadores
-                        while (cantidadUsuariosON != 2 ) {
-                           /// if (hiloCantidadPlayers.getAceptar() !=4) {
+                        while (cantidadUsuariosON != 4) {
+                            /// if (hiloCantidadPlayers.getAceptar() !=4) {
                             //a=hiloCantidadPlayers.getAceptar();
-                            cantidadUsuariosON=conexion.getServidorChat().cantidadUsuarios();
-                           
-                           //System.out.println("Soy Aceptar de la hebra = " + hiloCantidadPlayers.getAceptar());
+                            cantidadUsuariosON = conexion.getServidorChat().cantidadUsuarios();
+
+                            //System.out.println("Soy Aceptar de la hebra = " + hiloCantidadPlayers.getAceptar());
                         }
                         //sacaMatriz(int[][] matrizz, int jugador, int cantidadJugadores, int ratonx, int ratony, int salidax, int saliday)
-                         //int matrizMostrar[][];
+                        //int matrizMostrar[][];
                         //matrizMostrar = sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()),chatActual.turnoHilo(), hiloCantidadPlayers.getAceptar(), objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(),objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y());
                         //VentanaPrincipal.setMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()));
                         //synchronized (VentanaPrincipal) {
                         VentanaPrincipal.setMatriz(sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()), chatActual.turnoHilo(), cantidadUsuariosON, objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(), objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y()));
-                        
+
                         VentanaPrincipal.imprimirTablero();
                         //int muestra[][]=objetoRemotoTablero.getTablero2();          
                         //for (int i=0; i<10; i++) {

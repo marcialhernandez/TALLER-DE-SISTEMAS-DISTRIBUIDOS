@@ -17,6 +17,9 @@ import rmi_interface.*;
 public class GroupChat extends UnicastRemoteObject implements GroupChatInterface {
 
     private Hashtable l;
+    private Vector chatGlobal;
+    
+    //private Vector buzonGlobal;
 
     /**
      *
@@ -25,6 +28,25 @@ public class GroupChat extends UnicastRemoteObject implements GroupChatInterface
     public GroupChat() throws RemoteException {
         super();
         l = new Hashtable();
+        chatGlobal=new Vector();
+    }
+    
+    
+    @Override
+    public void setChatGlobal(String entrada) throws RemoteException {
+    this.chatGlobal.add(entrada);
+        
+    }
+    
+    @Override
+    public String getChatGlobal() throws RemoteException {
+        String mensaje="";
+        if(!this.chatGlobal.isEmpty()){
+        mensaje=(String)this.chatGlobal.get(0);
+        this.chatGlobal.remove(0);
+        return mensaje;
+        }
+        return mensaje;
     }
     
     @Override

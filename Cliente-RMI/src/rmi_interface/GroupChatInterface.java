@@ -13,6 +13,10 @@ import java.rmi.*;
  */
 public interface GroupChatInterface extends Remote {
 
+    public void setChatGlobal(String entrada) throws RemoteException;
+
+    public String getChatGlobal() throws RemoteException;
+
     public boolean login(MessengerInterface m) throws RemoteException;
 
     public boolean unlogin(MessengerInterface m) throws RemoteException;

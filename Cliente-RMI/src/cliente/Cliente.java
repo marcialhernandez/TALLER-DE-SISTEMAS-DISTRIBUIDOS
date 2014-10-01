@@ -62,7 +62,12 @@ class escuchaTablero extends Thread {
 
     escuchaTablero(ConexionCliente entradaConexion) {
         conexionActual = entradaConexion;
-        aceptar = 0;
+        this.aceptar = 0;
+    }
+    
+    escuchaTablero(ConexionCliente entradaConexion,int varGlobal) {
+        conexionActual = entradaConexion;
+        this.aceptar =varGlobal;
     }
 
     int getAceptar() {
@@ -81,7 +86,7 @@ class escuchaTablero extends Thread {
                 //}
                 //System.out.println(conexionActual.getServidorChat().cantidadUsuarios());
 
-                sleep(5000);  // 3second
+                sleep(2000);  // 3second
                 //VentanaPrincipal = new PaginaPrincipal();
                 //    System.out.println(conexion.getServidorChat().cantidadUsuarios());
                 //    VentanaPrincipal.setMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()));
@@ -143,11 +148,11 @@ class hiloChat extends Thread {
     }
 
     public int turnoHilo() throws RemoteException {
-        return sesionCliente.getTurnoCliente();
+        return this.sesionCliente.getTurnoCliente();
     }
 
     public int cantidadJugadores() throws RemoteException {
-        return chat.cantidadUsuarios();
+        return this.chat.cantidadUsuarios();
     }
 
     @Override
@@ -160,7 +165,7 @@ class hiloChat extends Thread {
                 synchronized (this) {
                     username = entradaChat.nextLine();
                 }
-                sesionCliente = new Messenger(username, chat);
+                this.sesionCliente = new Messenger(username, chat);
                 ingresoUsername = chat.login(sesionCliente);
                 if (ingresoUsername == false) {
                     System.out.println("[System] Ya existe el usuario ingreso, intentelo de nuevo");
@@ -168,6 +173,7 @@ class hiloChat extends Thread {
                 }
 
             }
+            this.sesionCliente.setTurnoCliente(chat.cantidadUsuarios());
             System.out.println(sesionCliente.getTurnoCliente());
             chat.sendToAll("Just Connected,\n", sesionCliente);
 
@@ -210,42 +216,6 @@ class hiloChat extends Thread {
     }
 }
 
-//http://stackoverflow.com/questions/1522444/how-to-redirect-all-console-output-to-a-swing-jtextarea-jtextpane-with-the-right
-class MyOutputStream extends OutputStream {
-
-    private PipedOutputStream out = new PipedOutputStream();
-    private Reader reader;
-
-    public MyOutputStream() throws IOException {
-        PipedInputStream in = new PipedInputStream(out);
-        reader = new InputStreamReader(in, "UTF-8");
-    }
-
-    @Override
-    public void write(int i) throws IOException {
-        out.write(i);
-    }
-
-    @Override
-    public void write(byte[] bytes, int i, int i1) throws IOException {
-        out.write(bytes, i, i1);
-    }
-
-    @Override
-    public void flush() throws IOException {
-        if (reader.ready()) {
-            char[] chars = new char[1024];
-            int n = reader.read(chars);
-
-            // this is your text
-            String txt = new String(chars, 0, n);
-
-            // write to System.err in this example
-            System.err.print(txt);
-        }
-    }
-}
-
 public class Cliente {
 
     public static int Puerto = 2014;                                 //Número del puerto que está alojado el servidor
@@ -263,6 +233,7 @@ public class Cliente {
     static PaginaPrincipal VentanaPrincipal;
     static CustomInputStream entradaDesdeChat;
     static public volatile boolean aceptar = true;
+    static int cantidadUsuariosON=0;
 
     public static int[][] sacaMatriz(int[][] matrizz, int jugador, int cantidadJugadores, int ratonx, int ratony, int salidax, int saliday) {
         int[][] matrizValida = new int[10][10];
@@ -465,18 +436,18 @@ public class Cliente {
                         //System.setOut(salidaToChat);
                         hiloChat chatActual = new hiloChat(conexion);
                         VentanaPrincipal = new PaginaPrincipal();
-                        escuchaTablero hiloCantidadPlayers = new escuchaTablero(conexion);
-
-                        chatActual.start();
-                        hiloCantidadPlayers.start();
-                        int a=0;
+                        //escuchaTablero hiloCantidadPlayers = new escuchaTablero(conexion);
                         
-
-
+                        chatActual.start();
+                        //hiloCantidadPlayers.start();
+                        cantidadUsuariosON=conexion.getServidorChat().cantidadUsuarios();
+                        //int a=0;
+                        
                         //--------No iniciar hasta tener cantidad de jugadores
-                        while (a!=2/*hiloCantidadPlayers.getAceptar() != 2 /*|| (hiloCantidadPlayers.getAceptar() != 4&& bandera4==false)  /*|| hiloCantidadPlayers.getAceptar() != 5 || hiloCantidadPlayers.getAceptar() != 10*/) {
+                        while (cantidadUsuariosON != 2 ) {
                            /// if (hiloCantidadPlayers.getAceptar() !=4) {
-                            a=hiloCantidadPlayers.getAceptar();
+                            //a=hiloCantidadPlayers.getAceptar();
+                            cantidadUsuariosON=conexion.getServidorChat().cantidadUsuarios();
                            
                            //System.out.println("Soy Aceptar de la hebra = " + hiloCantidadPlayers.getAceptar());
                         }
@@ -485,7 +456,7 @@ public class Cliente {
                         //matrizMostrar = sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()),chatActual.turnoHilo(), hiloCantidadPlayers.getAceptar(), objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(),objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y());
                         //VentanaPrincipal.setMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()));
                         //synchronized (VentanaPrincipal) {
-                        VentanaPrincipal.setMatriz(sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()), chatActual.turnoHilo(), hiloCantidadPlayers.getAceptar(), objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(), objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y()));
+                        VentanaPrincipal.setMatriz(sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()), chatActual.turnoHilo(), cantidadUsuariosON, objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(), objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y()));
                         
                         VentanaPrincipal.imprimirTablero();
                         //int muestra[][]=objetoRemotoTablero.getTablero2();          

@@ -13,7 +13,17 @@ import java.rmi.*;
  */
 public interface GroupChatInterface extends Remote {
 
+    public void setUbicacionRaton(int x, int y) throws RemoteException;
+
+    public int getUbicacionRatonX() throws RemoteException;
+
+    public int getUbicacionRatonY() throws RemoteException;
+
     public void setChatGlobal(String entrada) throws RemoteException;
+
+    public int getTurnoServ() throws RemoteException;
+
+    public void cambiaTurno() throws RemoteException;
 
     public String getChatGlobal() throws RemoteException;
 

@@ -24,6 +24,41 @@ import static tablero.PaginaPrincipal.vacio;
  * @author Daniel Wladdimiro Cottet
  * @title Taller de sistemas distribuidos - Clase 1
  */
+class escuchaTurno extends Thread {
+
+    ConexionCliente conexionActual;
+    hiloChat hiloChatCliente;
+    PaginaPrincipal ventanaCliente;
+
+    escuchaTurno(ConexionCliente a, hiloChat b, PaginaPrincipal c) {
+        conexionActual = a;
+        hiloChatCliente = b;
+        ventanaCliente = c;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                //if(conexionActual.getServidorChat().getTurnoServ()==hiloChatCliente.turnoHilo()){
+                synchronized (this) {
+                    VentanaPrincipal.posicionFila=conexionActual.getServidorChat().getUbicacionRatonX();
+                    VentanaPrincipal.posicionColumna=conexionActual.getServidorChat().getUbicacionRatonY();
+                    VentanaPrincipal.jugadorTurno = conexionActual.getServidorChat().getTurnoServ();
+                    ventanaCliente.revisaTurno();
+                    //System.out.print("turCl="+hiloChatCliente.turnoHilo()+"turServ="+conexionActual.getServidorChat().getTurnoServ()+"\n");
+                    // 3second
+                }
+                sleep(300);
+                //}
+            }
+            //WithThread.showElapsedTime("ThreadedPseudoIO finishes
+        } catch (RemoteException | InterruptedException ex) {
+            Logger.getLogger(escuchaChat.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}
+
 //Hilo que se ejecuta en segundo plano cuando se ejecuta hiloChat
 //Verifica cada 3 segundos si el buzon de messenger tiene mensajes
 //En caso que tenga, saca el primer mensaje de la pila de mensajes
@@ -78,18 +113,11 @@ class escuchaTablero extends Thread {
     public void run() {
         try {
             while (true) {
-                //if (sesionActual.comprobarMensajes() == true) {
-                //System.out.println(sesionActual.imprimirMensaje());
-                //if (conexionActual.getServidorChat().cantidadUsuarios() == 2) {
 
                 this.aceptar = conexionActual.getServidorChat().cantidadUsuarios();
-                //}
-                //System.out.println(conexionActual.getServidorChat().cantidadUsuarios());
 
                 sleep(2000);  // 3second
-                //VentanaPrincipal = new PaginaPrincipal();
-                //    System.out.println(conexion.getServidorChat().cantidadUsuarios());
-                //    VentanaPrincipal.setMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()));
+
             }
 
         } catch (RemoteException | InterruptedException ex) {
@@ -134,19 +162,6 @@ class hiloChat extends Thread {
 
     }
 
-    /*hiloChat(ConexionCliente conexionActual, PaginaPrincipal VentanaPr) {
-
-        chat = conexionActual.getServidorChat();
-        entradaChat = new Scanner(System.in);
-        sesionCliente = null;
-        ingresoUsername = false;
-        username = "";
-        mensaje = "";
-        banderaRecepcionChat = 0;
-        PaginaPrincipal VentanaPrincipal = new PaginaPrincipal();
-
-    }*/
-
     public int turnoHilo() throws RemoteException {
         return this.sesionCliente.getTurnoCliente();
     }
@@ -155,14 +170,20 @@ class hiloChat extends Thread {
         return this.chat.cantidadUsuarios();
     }
 
+    public String nombreClienteActual() throws RemoteException {
+        return this.username;
+    }
+
     @Override
     public void run() {
 
         try {
-            System.out.println("[System] Client Messenger is running");
+            System.out.println("[System] Iniciando partida...");
             System.out.println("[System] Ingrese su Nick");
+
             while (ingresoUsername == false) {
                 synchronized (this) {
+
                     username = entradaChat.nextLine();
                 }
                 this.sesionCliente = new Messenger(username, chat);
@@ -173,8 +194,9 @@ class hiloChat extends Thread {
                 }
 
             }
+
             this.sesionCliente.setTurnoCliente(chat.cantidadUsuarios());
-            System.out.println(sesionCliente.getTurnoCliente());
+            //System.out.println(sesionCliente.getTurnoCliente());
             chat.sendToAll("Just Connected,\n", sesionCliente);
 
             //Revisa el buzon del usuario e imprime el mensaje
@@ -209,7 +231,7 @@ class hiloChat extends Thread {
             }
 
         } catch (RemoteException e) {
-            System.out.println("Hello Client exception: " + e);
+            System.out.println("Exception: " + e);
         } catch (InterruptedException ex) {
             Logger.getLogger(hiloChat.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -478,112 +500,48 @@ public class Cliente {
                 //objetoRemotoChat=conexion.getServidorChat();
                 objetoRemotoTablero = conexion.getServidorTablero();
 
-                int opcion = 0;
-                while (opcion != 5) {
+                hiloChat chatActual = new hiloChat(conexion);
+                VentanaPrincipal = new PaginaPrincipal(conexion);
+                //escuchaTablero hiloCantidadPlayers = new escuchaTablero(conexion);
 
-                    //Escoger alguna opción del menú
-                    System.out.println("Menú RMI\n1. Ingresar un usuario al servidor\n2. Ver usuarios del servidor\n3. Ingresar al Chat\n4. Capitalizar \n5.Salir ");
-                    Scanner sc = new Scanner(System.in);
-                    opcion = Integer.parseInt(sc.next());
+                chatActual.start();
 
-                    if (opcion == 1) {
+                //hiloCantidadPlayers.start();
+                cantidadUsuariosON = conexion.getServidorChat().cantidadUsuarios();
 
-                        System.out.println("Ingrese el nombre del usuario: ");
-                        sc = new Scanner(System.in);
-                        String usuario = sc.next();
+                //--------No iniciar hasta tener cantidad de jugadores
+                while (cantidadUsuariosON != 2) {
 
-                        //Llama a un método del objeto remoto, y se le ingresa un parámetro a éste método
-                        boolean ingreso = objetoRemoto.ingresarUsuario(usuario);
-                        if (ingreso) {
-                            System.out.println("¡Felicitaciones, ha sido agregado el usuario!");
-                        } else {
-                            System.out.println("Lamentablemente no ha sido ingresado el usuario, pruebe con otro nombre...");
+                    cantidadUsuariosON = conexion.getServidorChat().cantidadUsuarios();
+
+                }
+
+                VentanaPrincipal.setMatriz(sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()), chatActual.turnoHilo(), cantidadUsuariosON, objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(), objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y()));
+
+                VentanaPrincipal.imprimirTablero();
+
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        VentanaPrincipal.setVisible(true);
+                        VentanaPrincipal.cambiaSalida();
+                        try {
+                            VentanaPrincipal.numeroJugador = chatActual.turnoHilo();
+                            VentanaPrincipal.ingresaTitulo(chatActual.nombreClienteActual());
+
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
-                    } else if (opcion == 2) {
-                        //Llama a un método del objeto remoto
-                        ArrayList<String> usuarios = objetoRemoto.verUsuarios();
+                        escuchaTurno hiloTurno = new escuchaTurno(conexion, chatActual, VentanaPrincipal);
+                        hiloTurno.start();
 
-                        for (String usuario : usuarios) {
-                            System.out.println("Usuario: " + usuario);
-                        }
+                    }
+                });
+                while (banderaChat == true) {
+                    if (chatActual.isAlive() == false) {
 
-                    } else if (opcion == 3) {
-
-                        //salidaToChat = new PrintStream(new MyOutputStream(), true, "UTF-8");
-                        //System.setOut(salidaToChat);
-                        hiloChat chatActual = new hiloChat(conexion);
-                        VentanaPrincipal = new PaginaPrincipal(conexion);
-                        //escuchaTablero hiloCantidadPlayers = new escuchaTablero(conexion);
-
-                        chatActual.start();
-                        //hiloCantidadPlayers.start();
-                        cantidadUsuariosON = conexion.getServidorChat().cantidadUsuarios();
-                        //int a=0;
-
-                        //--------No iniciar hasta tener cantidad de jugadores
-                        while (cantidadUsuariosON != 4) {
-                            /// if (hiloCantidadPlayers.getAceptar() !=4) {
-                            //a=hiloCantidadPlayers.getAceptar();
-                            cantidadUsuariosON = conexion.getServidorChat().cantidadUsuarios();
-
-                            //System.out.println("Soy Aceptar de la hebra = " + hiloCantidadPlayers.getAceptar());
-                        }
-                        //sacaMatriz(int[][] matrizz, int jugador, int cantidadJugadores, int ratonx, int ratony, int salidax, int saliday)
-                        //int matrizMostrar[][];
-                        //matrizMostrar = sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()),chatActual.turnoHilo(), hiloCantidadPlayers.getAceptar(), objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(),objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y());
-                        //VentanaPrincipal.setMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()));
-                        //synchronized (VentanaPrincipal) {
-                        VentanaPrincipal.setMatriz(sacaMatriz(objetoRemotoTablero.getTablero(conexion.getServidorChat()), chatActual.turnoHilo(), cantidadUsuariosON, objetoRemotoTablero.getPosicion8X(), objetoRemotoTablero.getPosicion8Y(), objetoRemotoTablero.getPosicion5X(), objetoRemotoTablero.getPosicion5Y()));
-
-                        VentanaPrincipal.imprimirTablero();
-                        //int muestra[][]=objetoRemotoTablero.getTablero2();          
-                        //for (int i=0; i<10; i++) {
-                        //    for (int j=0; i<10; i++) {
-                        //        VentanaPrincipal.matriz[i][j]=muestra[i][j];
-                        //    }                            
-                        //}
-
-                        //entradaDesdeChat=new CustomInputStream (VentanaPrincipal);
-                        java.awt.EventQueue.invokeLater(new Runnable() {
-                            public void run() {
-                                VentanaPrincipal.setVisible(true);
-                            }
-                        });
-                        while (banderaChat == true) {
-                            if (chatActual.isAlive() == false) {
-
-                                banderaChat = false;
-                            }
-                        }
-
-                    } else if (opcion == 4) {
-
-                        //tablero_jugador tablero = new tablero_jugador();
-                        //int tablero2[][]=tablero.getTablero2();
-                        //objetoRemotoTablero.ServicioTablero ();
-                        int muestra[][] = objetoRemotoTablero.getTablero2();
-                        //VentanaPrincipal.matriz=muestra;
-                        for (int i = 0; i < 10; i++) {
-                            for (int j = 0; j < 10; j++) {
-                                System.out.print(muestra[i][j]);
-
-                            }
-                            System.out.println();
-                        }
-
-                        //System.out.println("Tablero");
-                        //Llama a un método del objeto remoto
-                        /*Scanner consola = new Scanner(System.in);
-                         String palabra="";
-                         while(! palabra.equals("@exit")){
-                         System.out.println("Ingrese la palabra a capitalizar,\npara salir ingrese @exit");
-                         palabra = consola.nextLine();
-                         String salida=objetoRemotoEco.eco(palabra);
-                         System.out.println("La palabra capitalizada es : " + salida);
-                         } */
-                    } else if (opcion != 5) {
-                        System.out.println("Ingrese un número válido por favor...");
+                           //System.out.println("turnoCliente" + chatActual.turnoHilo() + "turnoservidor" + conexion.getServidorChat().getTurnoServ());
+                        banderaChat = false;
                     }
                 }
             }

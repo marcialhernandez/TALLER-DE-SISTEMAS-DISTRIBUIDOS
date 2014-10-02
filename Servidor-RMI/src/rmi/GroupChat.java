@@ -18,9 +18,10 @@ public class GroupChat extends UnicastRemoteObject implements GroupChatInterface
 
     private Hashtable l;
     private Vector chatGlobal;
-    
-    //private Vector buzonGlobal;
+    private int turnoActual;
+    private int posicionX,posicionY;
 
+    //private Vector buzonGlobal;
     /**
      *
      * @throws RemoteException
@@ -28,29 +29,61 @@ public class GroupChat extends UnicastRemoteObject implements GroupChatInterface
     public GroupChat() throws RemoteException {
         super();
         l = new Hashtable();
-        chatGlobal=new Vector();
+        chatGlobal = new Vector();
+        turnoActual = 1;
+        this.posicionX=0;
+        this.posicionY=0;
     }
     
+    @Override
+    public void setUbicacionRaton(int x,int y) throws RemoteException {
+     this.posicionX=x;
+     this.posicionY=y;
+    }
     
+    @Override
+    public int getUbicacionRatonX() throws RemoteException {
+     return this.posicionX;
+    }
+    
+    @Override
+    public int getUbicacionRatonY() throws RemoteException {
+     return this.posicionY;
+    }
+
+    @Override
+    public int getTurnoServ() throws RemoteException {
+        return this.turnoActual;
+    }
+
+    @Override
+    public void cambiaTurno() throws RemoteException {
+        if (this.turnoActual < l.size()) {
+            this.turnoActual++;
+        } else {
+            this.turnoActual = 1;
+        }
+    }
+
     @Override
     public void setChatGlobal(String entrada) throws RemoteException {
-    this.chatGlobal.add(entrada);
-        
+        this.chatGlobal.add(entrada);
+
     }
-    
+
     @Override
     public String getChatGlobal() throws RemoteException {
-        String mensaje="";
-        if(!this.chatGlobal.isEmpty()){
-        mensaje=(String)this.chatGlobal.get(0);
-        this.chatGlobal.remove(0);
-        return mensaje;
+        String mensaje = "";
+        if (!this.chatGlobal.isEmpty()) {
+            mensaje = (String) this.chatGlobal.get(0);
+            this.chatGlobal.remove(0);
+            return mensaje;
         }
         return mensaje;
     }
-    
+
     @Override
-    public int cantidadUsuarios() throws RemoteException{
+    public int cantidadUsuarios() throws RemoteException {
         return this.l.size();
     }
 
@@ -121,7 +154,7 @@ public class GroupChat extends UnicastRemoteObject implements GroupChatInterface
 //       public void sendTo(String s, MessengerInterface from, String to, GroupChatInterface server) throws RemoteException {
 
     public void sendTo(String s, MessengerInterface from, String to) throws RemoteException {
-            //if (!l.containsKey(server.getMessenger(to))){
+        //if (!l.containsKey(server.getMessenger(to))){
         //MessengerInterface destiny=l.getMessenger(to);
         String mensaje = "MP from [" + from.getUsername() + "]" + " " + s;
         MessengerInterface m = (MessengerInterface) l.get(to);
